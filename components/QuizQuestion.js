@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { styles as s } from "react-native-style-tachyons";
 import TextButton from './TextButton'
+import { Button, } from 'react-native-ui-lib'; //eslint-disable-line
 
 
 class QuizQuestion extends Component {
     state = {
-        isQuestion: false
+        isQuestion: true
     }
 
     handleCorrect = () => {
@@ -28,31 +29,42 @@ class QuizQuestion extends Component {
     render() {
         const { index, question, totalQuestions } = this.props
         const { isQuestion } = this.state
-       
+
         return (
-            <View>
-                <View>
-                    <Text>{index + 1}/{totalQuestions}</Text>
+            <View >
+                <View style={styles.smallText}>
+                    <Text >{index + 1}/{totalQuestions}</Text>
                 </View>
-                <View>
-                    {isQuestion 
-                    ? <View>
-                        <Text>{question && question.question}?</Text>
-                    </View> 
-                    : <TextButton  onPress={this.toggle}>Question</TextButton>}
+                <View style={{ justifyContent: 'center', alignItems: "center" }}>
+                    {isQuestion
+                        ? <View>
+                            <Text style={styles.bigText}>{question && question.question}?</Text>
+                        </View>
+                        : <TextButton styles={styles.active} onPress={this.toggle}>Question</TextButton>}
                     {!isQuestion
-                    ?<View>
-                        <Text>{question && question.answer}</Text>
+                        ? <View>
+                            <Text style={styles.bigText}>{question && question.answer}</Text>
+                        </View>
+                        : <TextButton styles={styles.active} onPress={this.toggle}>Answer</TextButton>}
+                    <View style={{marginTop:80}}>
+                       
+                        <Button
+                            backgroundColor="#FB3C62"
+                            label="Correct"
+                            enableShadow
+                            borderRadius={7}
+                            style={{ height: 45, margin:20 }}
+                            onPress={this.handleCorrect}
+                        />
+                        <Button
+                            backgroundColor="#FB3C62"
+                            label="Incorrect"
+                            enableShadow
+                            borderRadius={7}
+                            style={{ height: 45, }}
+                            onPress={this.handleIncorrect}
+                        />
                     </View>
-                    :<TextButton onPress={this.toggle}>Answer</TextButton>}
-                </View>
-                <View>
-                    <TouchableOpacity onPress={this.handleCorrect}>
-                        <Text>Correct</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={this.handleIncorrect}>
-                        <Text>Incorrect</Text>
-                    </TouchableOpacity>
                 </View>
             </View>
 
@@ -61,8 +73,17 @@ class QuizQuestion extends Component {
 }
 
 const styles = StyleSheet.create({
-    red: {
-        backgroundColor: 'red'
+    smallText: {
+        fontSize: 25,
+        margin: 10
+    },
+    bigText: {
+        fontSize: 35,
+    },
+    active: {
+        color: 'red',
+        margin: 20,
+        fontSize: 20
     }
 
 })

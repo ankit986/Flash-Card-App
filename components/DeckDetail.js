@@ -1,77 +1,75 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, AsyncStorage } from 'react-native';
 import { styles as s } from "react-native-style-tachyons";
-import { getDeckData, removeDeck, DECKS_STORAGE_KEY } from "../utils/api";
+import { getDeckData, removeDeckFromAsync, DECKS_STORAGE_KEY } from "../utils/api";
 import AddCard from './AddCard'
 import Quiz from './Quiz'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { connect } from 'react-redux'
+import { addDeck } from '../actions/deck'
+import {  Button, } from 'react-native-ui-lib'; //eslint-disable-line
 
 class DeckDetail extends Component {
 
     state = {
-        
+
         title: null,
         noOfCards: null
     }
-    deck = this.props.route.params.deckName
 
-    componentDidMount() {
-
-        const { navigation } = this.props;
-        const unsubscribe = navigation.addListener('focus', () => {
-            // The screen is focused
-            // Call any action
-          });
-      
-          // Return the function to unsubscribe from the event so it gets removed on unmount
-    //    console.log(this.state)
-        const data = this.props.deck
-
-
-        if (data !== undefined) {
-            this.setState({
-                title: data.title,
-                noOfCards: data.questions.length
-            })
-        }
-      
-        return unsubscribe;
-
-    }
-    
 
 
 
     deleteDeck = () => {
-        //Navigate back
-        removeDeck(this.deck)
+        console.log(this.props.decks)
+        const { goBack, removeDeck } = this.props
+        removeDeck();
+        removeDeckFromAsync(this.props.title)
+        goBack();
+
     }
 
-
     render() {
-        const { title, noOfCards } = this.state
+        const { title, noOfCards } = this.props
+        
         return (
             <View >
-                <View>
-                    <Text style={[s.f3, s.bg_black, s.mb2, s.tc]}>
+                <View style={{ marginTop: 100, marginBottom: 70, justifyContent: "center", alignItems: "center" }}>
+                    <Text style={{ fontSize: 50 }}>
                         {title}
                     </Text>
-                    <Text style={[s.f5, s.fw4, s.gray, s.mt0]}>
+                    <Text style={{ fontSize: 20, color: 'gray' }} >
                         {noOfCards} Cards
                     </Text>
                 </View>
-                <View>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('AddCard', { deckName: title })}>
-                        <Text>Add Card</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Quiz', { deckName: title })}>
-                        <Text>Start Quiz</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={this.deleteDeck}>
-                        <Text>Delete Deck</Text>
-                    </TouchableOpacity>
+                <View style={{ justifyContent: "center", alignItems: "center" }}>
+
+                    <Button
+                        backgroundColor="#FB3C62"
+                        label="New Question"
+                        enableShadow
+                        borderRadius={7}
+                        style={{ height: 45, marginBottom: 10 }}
+                        onPress={() => this.props.navigation.navigate('AddCard', { deckName: title })}
+                    />
+                    <Button
+                        backgroundColor="#FB3C62"
+                        label="Start Quiz"
+                        borderRadius={7}
+                        enableShadow
+                        style={{ height: 45, marginBottom: 10 }}
+                        onPress={() => this.props.navigation.navigate('Quiz', { deckName: title })}
+                    />
+                    <Button
+                        backgroundColor="#FB3C62"
+                        label="Delete Deck"
+                        borderRadius={7}
+                        enableShadow
+
+                        style={{ height: 45, marginBottom: 10 }}
+                        onPress={this.deleteDeck}
+                    />
                 </View>
             </View>
         )
@@ -87,12 +85,32 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(decks, props) {
     const deckName = props.route.params.deckName
+    console.log('redux store : ', decks)
     const deck = decks[deckName]
-    return {
-        deck
-    }
 
+    return {
+
+        title: deck !== null ? deck.title : null,
+        noOfCards: deck !== null ? deck.questions.length : null,
+    }
 }
 
-export default connect(mapStateToProps)(DeckDetail)
+function mapDispatchToProps(dispatch, props) {
+    console.log(props)
+    const deckName = props.route.params.deckName
+    console.log(deckName)
+
+    return {
+        goBack: () => {
+            props.navigation.goBack();
+        },
+        removeDeck: () => {
+            dispatch(addDeck({
+                [deckName]: null
+            }))
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DeckDetail)
 

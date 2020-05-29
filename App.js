@@ -14,6 +14,8 @@ import { createStore } from 'redux'
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createStackNavigator } from '@react-navigation/stack'
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+
 
 NativeTachyons.build({
 }, StyleSheet);
@@ -21,17 +23,19 @@ NativeTachyons.build({
 const TabRouteConfig = {
   Decks: {
     name: 'Decks',
-    component: DeckList
+    component: DeckList,
+    options: { tabBarIcon: ({ tintColor }) => <MaterialCommunityIcons name="cards" size={30} color={tintColor} />, title: 'Decks' }
   },
   NewDeck: {
     name: 'New Deck',
-    component: NewDeck
+    component: NewDeck,
+    options: { tabBarIcon: ({ tintColor }) => <Ionicons name="ios-add-circle-outline" size={30} color={tintColor} />, title: 'Add Deck' }
   }
 }
 
 const tabNavigatorConfig = {
-
   tabBarOptions: {
+    activeTintColor: 'purple',
     style: {
       height: 56,
       shadowColor: "rgba(0, 0, 0, 0.24)",
@@ -61,9 +65,7 @@ const StackRouteConfig = {
   Home: {
     name: 'Home',
     component: Home,
-    options: {
-      headerShown: false
-    }
+
   },
 
   DeckDetail: {
@@ -85,8 +87,8 @@ const StackRouteConfig = {
 
 const StackRoutes = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
+    <NavigationContainer >
+      <Stack.Navigator >
         <Stack.Screen {...StackRouteConfig['Home']} />
         <Stack.Screen {...StackRouteConfig['DeckDetail']} />
         <Stack.Screen {...StackRouteConfig['AddCard']} />
@@ -101,11 +103,6 @@ export default function App() {
   return (
     <Provider store={createStore(reducers)}>
       <StackRoutes />
-      {/* <DeckList /> */}
-      {/* <DeckDetail deckName={'JavaScript'}/> */}
-      {/* <Quiz deckName={'React'}/> */}
-      {/* <NewDeck deckName={'Native Development'}/> */}
-      {/* <AddCard deckName={'JavaScript'}/> */}
     </Provider>
 
   );

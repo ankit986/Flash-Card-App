@@ -56,7 +56,7 @@ export function addDeckToAsync(key, value) {
 }
 
 
-export const removeDeck = async (key) => {
+export const removeDeckFromAsync = async (key) => {
 
   try {
     const value = await AsyncStorage.getItem(DECKS_STORAGE_KEY);
@@ -64,9 +64,7 @@ export const removeDeck = async (key) => {
       const data = JSON.parse(value);
       data[key] = undefined
       delete data[key]
-  
-      AsyncStorage.setItem(DECKS_STORAGE_KEY, JSON.stringify(data))
-
+      return AsyncStorage.setItem(DECKS_STORAGE_KEY, JSON.stringify(data))
     }
   } catch (error) {
     // Error retrieving data
