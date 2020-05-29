@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, KeyboardAvoidingView } from 'react-native';
-import { styles as s } from "react-native-style-tachyons";
+import { View, StyleSheet, TextInput, KeyboardAvoidingView } from 'react-native';
 import { addQuestionToAsync } from '../utils/api'
 import { addQuestion } from '../actions/deck'
 import { connect } from 'react-redux'
@@ -17,14 +16,12 @@ class AddCard extends Component {
 
     handleSubmit = () => {
         const deck = this.props.route.params.deckName;
+        this.props.goBack();
+        
+        this.props.addCard(this.state, deck)
+        
         addQuestionToAsync(deck, this.state)
 
-        // this.props.dispatch(addQuestion(this.state, deck))
-        this.props.addCard(this.state, deck)
-
-        this.props.goBack();
-
-        //Navigate to back
     }
     handleQuestion = (text) => {
         this.setState({
@@ -89,14 +86,12 @@ const styles = StyleSheet.create({
 })
 
 function mapStateToProps(deck) {
-    // console.log(deck)
     return {
         deck
     }
 }
 
 function mapDispatchToProps(dispatch, props) {
-    // console.log('mdtp', props)
     return {
         addCard: (title, deck) => {
             dispatch(addQuestion(title, deck))

@@ -1,28 +1,24 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { styles as s } from "react-native-style-tachyons";
-import DeckCard from './DeckCard'
-import { getDeckInfo } from '../utils/helper'
+import { StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { getDeckData } from '../utils/api'
 import { recieveDeck } from '../actions/deck'
 import { connect } from 'react-redux'
-// import DeckDetail from './DeckDetail';
-import { Constants, Colors, View, Card, Button, Text, Image } from 'react-native-ui-lib';
+import { View, Card, Text } from 'react-native-ui-lib';
 
 class DeckList extends Component {
 
-    //remove this state
-    state = {
-        decks: {}
 
+    state = {
+        loading: true
     }
+
     componentDidMount() {
 
         getDeckData()
             .then(
                 data => {
-                    const decks = data
-                    this.setState({ decks: decks })
+
+                    this.setState({ loading: false })
                     this.props.dispatch(recieveDeck(data))
                 }
             )
@@ -31,6 +27,13 @@ class DeckList extends Component {
 
     render() {
 
+        if (this.state.loading) {
+            return (
+                <View>
+                    <ActivityIndicator style={{ marginTop: 30 }} />
+                </View>
+            )
+        }
         const { decks } = this.props
         return (
             <View flex padding-20 >
@@ -43,11 +46,11 @@ class DeckList extends Component {
                     showsHorizontalScrollIndicator={true}
                 >
                     {Object.entries(decks).map(deck => {
-                     
+
                         return (
                             deck[1] !== null ?
                                 <View
-                                    style={{marginLeft:0, justifyContent: 'center' }}
+                                    key={deck[1]} style={{ marginLeft: 0, justifyContent: 'center' }}
                                 >
                                     <Card key={deck[0]}
                                         width={300}
@@ -55,7 +58,7 @@ class DeckList extends Component {
                                         borderRadius={15}
                                         useNative
                                         activeScale={1.05}
-                                        style={{ marginLeft:-5,marginRight: 15, justifyContent: 'center', alignItems: 'center' }}
+                                        style={{ marginLeft: -5, marginRight: 15, justifyContent: 'center', alignItems: 'center' }}
                                         onPress={() => this.props.navigation.navigate(
                                             'Deck Details',
                                             { deckName: deck[0] }
@@ -78,7 +81,7 @@ class DeckList extends Component {
         )
     }
 }
-//Remove this part 
+
 function mapStateToProps(decks) {
     console.log('store', decks)
     return {

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { styles as s } from "react-native-style-tachyons";
+import { View, Text,  StyleSheet } from 'react-native';
 import TextButton from './TextButton'
 import { Button, } from 'react-native-ui-lib'; //eslint-disable-line
 

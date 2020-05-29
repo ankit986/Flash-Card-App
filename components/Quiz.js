@@ -1,30 +1,29 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { styles as s } from "react-native-style-tachyons";
-import { getDeckData, removeDeck, DECKS_STORAGE_KEY } from "../utils/api";
+import { View, Text,  StyleSheet } from 'react-native';
 import QuizQuestion from './QuizQuestion';
 import { connect } from 'react-redux'
 import { Button, } from 'react-native-ui-lib'; //eslint-disable-line
+import { clearLocalNotification, setLocalNotification } from '../utils/helper'
+
 
 class Quiz extends Component {
+ 
   state = {
     questions: [],
     index: 0,
     correct: 0,
     incorrect: 0,
-    restart:false
   }
   componentDidMount() {
-    const deckName = this.props.route.params.deckName;
-    // console.log('q',this.props)
 
-    const { questions } = this.props
+    const deckName = this.props.route.params.deckName;
+
+    const { questions, index } = this.props
 
     this.setState({
       questions
     })
-
-  }
+   }
 
   nextQuestion = () => {
     const { questions, index } = this.state;
@@ -32,6 +31,12 @@ class Quiz extends Component {
       this.setState({
         index: index + 1
       })
+    }
+
+    if (questions.length - 1 === index) {
+      console.log('clear  notification')
+      clearLocalNotification()
+        .then(setLocalNotification)
     }
   }
 
@@ -43,9 +48,13 @@ class Quiz extends Component {
 
   }
 
-  restart = ()=>{
-    this.forceUpdate();
-    console.warn('rest')
+  restart = () => {
+    this.setState({
+      index:0,
+      correct:0,
+      incorrect:0
+    })
+    
   }
 
   updateInCorrect = () => {
@@ -58,7 +67,6 @@ class Quiz extends Component {
 
   render() {
     const { questions, index, correct, incorrect } = this.state
-    console.log(this.props)
     const totalQuestions = questions.length
     const question = questions[index]
     if (totalQuestions === 0) {
@@ -73,40 +81,40 @@ class Quiz extends Component {
       <View>
         {index < questions.length
           ? <View>
-            <QuizQuestion
-              index={index}
-              question={question}
-              totalQuestions={totalQuestions}
-              nextQuestion={this.nextQuestion}
-              updateCorrect={this.updateCorrect}
-              updateInCorrect={this.updateInCorrect} />
-          </View>
+              <QuizQuestion
+                index={index}
+                question={question}
+                totalQuestions={totalQuestions}
+                nextQuestion={this.nextQuestion}
+                updateCorrect={this.updateCorrect}
+                updateInCorrect={this.updateInCorrect} />
+            </View>
           : <View style={{ justifyContent: "center", alignItems: "center" }}>
-            <Text style={styles.bigText}>Score</Text>
-            <View style={styles.scores}>
-              <Text>correct:{correct}</Text>
-              <Text>Incorrect:{incorrect}</Text>
-            </View>
-            <View style={styles.scores}>
-              <Text>Percentage correct : {Math.round((correct * 100) / totalQuestions * 100) / 100}</Text>
-              <Text> Percentage Incorrect : {Math.round((incorrect * 100) / totalQuestions * 100) / 100}</Text>
-            </View>
+              <Text style={styles.bigText}>Score</Text>
+              <View style={styles.scores}>
+                <Text>correct:{correct}</Text>
+                <Text>Incorrect:{incorrect}</Text>
+              </View>
+              <View style={styles.scores}>
+                <Text>Percentage correct : {Math.round((correct * 100) / totalQuestions * 100) / 100}</Text>
+                <Text> Percentage Incorrect : {Math.round((incorrect * 100) / totalQuestions * 100) / 100}</Text>
+              </View>
 
-            <Button
-              backgroundColor="#FB3C62"
-              label="Restart Quiz"
-              enableShadow
-              borderRadius={7}
-              style={{ height: 45, margin:10}}
-              onPress={() =>this.props.navigation.navigate('Quiz')}
-            />
-            <Button
-              backgroundColor="#FB3C62"
-              label="Back To Deck"
-              enableShadow
-              borderRadius={7}
-              style={{ height: 45, }}
-              onPress={()=>this.props.navigation.goBack()}
+              <Button
+                backgroundColor="#FB3C62"
+                label="Restart Quiz"
+                enableShadow
+                borderRadius={7}
+                style={{ height: 45, margin: 10 }}
+                onPress={this.restart}
+              />
+              <Button
+                backgroundColor="#FB3C62"
+                label="Back To Deck"
+                enableShadow
+                borderRadius={7}
+                style={{ height: 45, }}
+                onPress={() => this.props.navigation.goBack()}
 
             />
           </View>

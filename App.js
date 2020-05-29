@@ -1,12 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, StatusBar } from 'react-native';
 import DeckList from './components/DeckList'
 import NativeTachyons from 'react-native-style-tachyons';
-import { styles as s } from "react-native-style-tachyons";
 import DeckDetail from './components/DeckDetail';
 import Quiz from './components/Quiz';
 import NewDeck from './components/NewDeck';
-import NewQuestion from './components/AddCard';
 import AddCard from './components/AddCard';
 import reducers from './reducers'
 import { Provider } from 'react-redux'
@@ -15,10 +13,17 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createStackNavigator } from '@react-navigation/stack'
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import {setLocalNotification} from './utils/helper'
 
 
-NativeTachyons.build({
-}, StyleSheet);
+function FlashStatusBar({ backgroundColor, ...props }) {
+  return (
+    <View style={{ backgroundColor, height: 15 }}>
+      <StatusBar translucent backgroundColor={backgroundColor}{...props} />
+    </View>
+  )
+}
+
 
 const TabRouteConfig = {
   Decks: {
@@ -99,20 +104,18 @@ const StackRoutes = () => {
   )
 }
 
-export default function App() {
-  return (
-    <Provider store={createStore(reducers)}>
-      <StackRoutes />
-    </Provider>
+export default class App extends React.Component {
+  componentDidMount() {
+    setLocalNotification();
+  }
+  render() {
+    return (
+      <Provider store={createStore(reducers)}>
+        <FlashStatusBar backgroundColor={'gray'} />
+        <StackRoutes />
+      </Provider>
 
-  );
+    );
+  }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

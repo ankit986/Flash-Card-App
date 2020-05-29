@@ -14,6 +14,5 @@ export default function ({ children, onPress, styles={}}) {
 const styles = StyleSheet.create({
     reset: {
         textAlign: 'center',
-  
     }
 })

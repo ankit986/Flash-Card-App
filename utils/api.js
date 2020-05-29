@@ -20,7 +20,6 @@ export const getDeckData = async (deckName) => {
       return deckName === undefined ? returningValue : returningValue[deckName]
     }
   } catch (error) {
-    // Error retrieving data
     console.warn('Error in getting data from Async Storage : ', error)
   }
 };
@@ -44,7 +43,7 @@ export const addQuestionToAsync = async (key, value) => {
     }
   }
 
-  catch (err) { console.warn("Error in adding data to AsyncStorage", err) }
+  catch (err) { console.warn("Error in adding Question to AsyncStorage", err) }
 }
 
 export function addDeckToAsync(key, value) {
@@ -67,7 +66,7 @@ export const removeDeckFromAsync = async (key) => {
       return AsyncStorage.setItem(DECKS_STORAGE_KEY, JSON.stringify(data))
     }
   } catch (error) {
-    // Error retrieving data
+    console.log("Error in getting data from Async Storage while removing deck : ", error)
   }
 
 }

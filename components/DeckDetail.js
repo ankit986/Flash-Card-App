@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, AsyncStorage } from 'react-native';
-import { styles as s } from "react-native-style-tachyons";
-import { getDeckData, removeDeckFromAsync, DECKS_STORAGE_KEY } from "../utils/api";
+import { View, Text,  StyleSheet, } from 'react-native';
+import {  removeDeckFromAsync  } from "../utils/api";
 import AddCard from './AddCard'
 import Quiz from './Quiz'
-import { NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
 import { connect } from 'react-redux'
 import { addDeck } from '../actions/deck'
 import {  Button, } from 'react-native-ui-lib'; //eslint-disable-line
+import { TextButton } from "./TextButton";
+
 
 class DeckDetail extends Component {
 
@@ -17,9 +16,6 @@ class DeckDetail extends Component {
         title: null,
         noOfCards: null
     }
-
-
-
 
     deleteDeck = () => {
         console.log(this.props.decks)
@@ -35,7 +31,7 @@ class DeckDetail extends Component {
         
         return (
             <View >
-                <View style={{ marginTop: 100, marginBottom: 70, justifyContent: "center", alignItems: "center" }}>
+                <View style={styles.cardDetails}>
                     <Text style={{ fontSize: 50 }}>
                         {title}
                     </Text>
@@ -66,7 +62,6 @@ class DeckDetail extends Component {
                         label="Delete Deck"
                         borderRadius={7}
                         enableShadow
-
                         style={{ height: 45, marginBottom: 10 }}
                         onPress={this.deleteDeck}
                     />
@@ -77,8 +72,11 @@ class DeckDetail extends Component {
 }
 
 const styles = StyleSheet.create({
-    red: {
-        backgroundColor: 'red'
+    cardDetails: {
+        marginTop: 100, 
+        marginBottom: 70, 
+        justifyContent: "center", 
+        alignItems: "center"
     }
 
 })
