@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, StatusBar } from 'react-native';
 import DeckList from './components/DeckList'
-import NativeTachyons from 'react-native-style-tachyons';
 import DeckDetail from './components/DeckDetail';
 import Quiz from './components/Quiz';
 import NewDeck from './components/NewDeck';
