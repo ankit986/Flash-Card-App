@@ -18,7 +18,7 @@ class DeckDetail extends Component {
     }
 
     deleteDeck = () => {
-        console.log(this.props.decks)
+        // console.log(this.props.decks)
         const { goBack, removeDeck } = this.props
         removeDeck();
         removeDeckFromAsync(this.props.title)
@@ -30,13 +30,14 @@ class DeckDetail extends Component {
         const { title, noOfCards } = this.props
         
         return (
+            title!==null?
             <View >
                 <View style={styles.cardDetails}>
                     <Text style={{ fontSize: 50 }}>
                         {title}
                     </Text>
                     <Text style={{ fontSize: 20, color: 'gray' }} >
-                        {noOfCards} Cards
+                        {noOfCards} {noOfCards>1?"Cards":"Card"}
                     </Text>
                 </View>
                 <View style={{ justifyContent: "center", alignItems: "center" }}>
@@ -67,6 +68,7 @@ class DeckDetail extends Component {
                     />
                 </View>
             </View>
+            :null
         )
     }
 }
@@ -83,7 +85,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(decks, props) {
     const deckName = props.route.params.deckName
-    console.log('redux store : ', decks)
+    // console.log('redux store : ', decks)
     const deck = decks[deckName]
 
     return {
@@ -94,9 +96,8 @@ function mapStateToProps(decks, props) {
 }
 
 function mapDispatchToProps(dispatch, props) {
-    console.log(props)
+    // console.log(props)
     const deckName = props.route.params.deckName
-    console.log(deckName)
 
     return {
         goBack: () => {

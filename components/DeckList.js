@@ -13,20 +13,17 @@ class DeckList extends Component {
     }
 
     componentDidMount() {
-
         getDeckData()
             .then(
                 data => {
-
                     this.setState({ loading: false })
                     this.props.dispatch(recieveDeck(data))
                 }
             )
     }
 
-
     render() {
-
+        let i = 0
         if (this.state.loading) {
             return (
                 <View>
@@ -35,10 +32,10 @@ class DeckList extends Component {
             )
         }
         const { decks } = this.props
+       
         return (
             <View flex padding-20 >
                 <ScrollView
-                    horizontal
                     height={100}
                     padding={15}
                     style={{ overflow: 'visible' }}
@@ -46,33 +43,32 @@ class DeckList extends Component {
                     showsHorizontalScrollIndicator={true}
                 >
                     {Object.entries(decks).map(deck => {
-
+                       i++;
                         return (
                             deck[1] !== null ?
                                 <View
-                                    key={deck[1]} style={{ marginLeft: 0, justifyContent: 'center' }}
+                                    key={i} style={styles.cardContainer}
                                 >
                                     <Card key={deck[0]}
-                                        width={300}
+                                        width={250}
                                         height={180}
                                         borderRadius={15}
                                         useNative
                                         activeScale={1.05}
-                                        style={{ marginLeft: -5, marginRight: 15, justifyContent: 'center', alignItems: 'center' }}
+                                        style={styles.card}
                                         onPress={() => this.props.navigation.navigate(
                                             'Deck Details',
                                             { deckName: deck[0] }
                                         )}>
-
                                         <Text text20>
                                             {deck[0]}
                                         </Text>
                                         <Text text40 dark50>
-                                            {deck[1].questions.length} Cards
+                                            {deck[1].questions.length} {deck[1].questions.length > 1 ? "Cards" : "Card"}
                                         </Text>
                                     </Card>
                                 </View>
-                                : <View></View>
+                                : null
                         )
                     }
                     )}
@@ -81,17 +77,23 @@ class DeckList extends Component {
         )
     }
 }
-
 function mapStateToProps(decks) {
-    console.log('store', decks)
+    // console.log('store', decks)
     return {
         decks
     }
 }
 
 const styles = StyleSheet.create({
-    red: {
-        backgroundColor: 'red'
+    cardContainer: {
+        margin: 10,
+        justifyContent: 'center'
+    },
+    card: {
+        marginRight: 15,
+        marginTop: 10,
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 
 })
